@@ -33,6 +33,40 @@ let quiz = [
             },
         ],
     },
+    {
+        question: "Qual a definição de meteodologia ativa?",
+        choices: [
+            {
+                text: "São processos de aprendizagem em que os alunso participam ativamente",
+                correct: false
+            },
+            {
+                text: "Processo de ensino pelo qual o aluno passa a ser o responsavél",
+                correct: false
+            },
+            {
+                text: "Todas as alternativas estao corretas",
+                correct: true
+            },
+        ],
+    },
+    {
+        question: "Quais meteodologias ativas, podem ser associadas a gamificação?",
+        choices: [
+            {
+                text: "ABE (Aprendizagem Baseada em Equipes)",
+                correct: false
+            },
+            {
+                text: "Sala Invertida",
+                correct: false
+            },
+            {
+                text: "Todas as alternativas estão corretas",
+                correct: true
+            },
+        ],
+    },
 ];
 
 let awsers = [].slice.call(document.getElementsByClassName("awnser"));
@@ -40,6 +74,8 @@ let question = document.getElementById('question');
 let selected = null;
 let selectedDiv = null;
 let questionID = 0;
+let right = 0;
+let wrong = 0;
 
 function select(div,id) {
     selected = id;
@@ -63,8 +99,8 @@ function updateQuestion() {
 }
 
 function check() {
-    if(questionID>=quiz.length-1){
-        alert("acabaram as questões")
+    if(questionID>quiz.length-1){
+        alert(`Acabaram as questões, você acertou ${right} questões e errou ${wrong}!`);
         return;
     }
 
@@ -79,11 +115,13 @@ function check() {
     if(correctIndex == selected){
         selectedDiv.style.backgroundColor = "#28a745";
         questionID++;
-        setTimeout(updateQuestion,2000);
+        setTimeout(updateQuestion,1000);
+        right++;
     }else{
         selectedDiv.style.backgroundColor = "#dc3545";
         questionID++;
-        setTimeout(updateQuestion,2000);
+        setTimeout(updateQuestion,1000);
+        wrong++;
     }
 }
 
