@@ -1,0 +1,53 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;400&display=swap');
+
+*{
+    font-family: 'Roboto', sans-serif;
+}
+
+body{
+    background-color: #00003d;
+    color: white;
+    margin: auto;
+    width: 50%;
+}
+
+.container{
+    margin: auto;
+    padding: 10px;
+}
+
+.question{
+    font-size: 20px;
+    margin: auto;
+    padding: 10px;
+}
+
+.awnsers{
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+    padding: 10px;
+}
+
+.awnser{
+    padding: 10px;
+    margin-top: 10px;
+    background-color: #6c757d;
+
+}
+
+.selected{
+    background-color: #17a2b8;
+    padding: 10px;
+    margin-top: 10px;
+}
+
+.next{
+    background-color: #28a745;
+    padding: 15px;
+    padding-left: 30px;
+    padding-right: 30px;
+    margin: 10px;
+    float: right;
+    text-align: right;
+}
