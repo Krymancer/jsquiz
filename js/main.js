@@ -215,6 +215,14 @@ let quiz = [
     },
 ];
 
+function getRand() {
+    return Math.floor(Math.random() * 10);
+}
+
+let indexes = [getRand(), getRand(), getRand()];
+
+quiz = [quiz[indexes[0]], quiz[indexes[1]], quiz[indexes[2]]];
+
 let awsers = [].slice.call(document.getElementsByClassName("awnser"));
 let question = document.getElementById('question');
 let selected = null;
@@ -242,29 +250,35 @@ function updateQuestion() {
     awsers.forEach((awnser, index) => {
         if (quiz[questionID].choices[index]) {
             awnser.innerHTML = quiz[questionID].choices[index].text;
-            awnser.style.visibility = "";
+            awnser.style.display = "";
         } else {
-            awnser.style.visibility = "hidden";
+            awnser.style.display = "none";
         }
 
     });
     clearSelection();
 }
 
-function check() {
-    if (selected == null) return;
-
-    if (questionID >= quiz.length - 1) {
+function lastQuestion(){
+    if (questionID > quiz.length - 1) {
         // alert(`Acabaram as questões, você acertou ${right} questões e errou ${wrong}!`);
         awsers.forEach(awnser => {
             awnser.style.visibility = "hidden";
         });
-        question.innerHTML = `Obrigado por responder o quiz, você acertou ${right} de ${quiz.length} questões`
+        question.innerHTML = `Obrigado por responder o quiz, você acertou ${right} de ${quiz.length} questões.<br>Por favor, preencha a baixo e envie as respostas`
         button = document.getElementById('next');
-        button.style.visibility = "hidden;"
-        return;
+        form = document.getElementById('form');
+        button.innerHTML = "Enviar";
+        button.style.display = "none";
+        form.style.display = "inline";
+        return true;
     }
+    return false;
+}
 
+function check() {
+    if (selected == null) return;
+    
     let correctIndex = -1;
 
     quiz[questionID].choices.forEach((choice, index) => {
@@ -280,15 +294,18 @@ function check() {
         questionID++;
         right++;
         status = "acertou";
-        setTimeout(updateQuestion, 1000);
+        if(!lastQuestion()){
+            setTimeout(updateQuestion, 1000);
+        }
 
     } else {
         selectedDiv.style.backgroundColor = "#dc3545";
         questionID++;
         wrong++;
         status = "errou";
-        setTimeout(updateQuestion, 1000);
-
+        if(!lastQuestion()){
+            setTimeout(updateQuestion, 1000);
+        }
     }
 
     responses.push({
@@ -302,3 +319,40 @@ function check() {
 }
 
 updateQuestion(questionID);
+
+function submit(){
+    let nameInput = document.getElementById('name');
+    let emailInput = document.getElementById('email');
+    let data = {
+        name: nameInput.value,
+        email: emailInput.value,
+        responses: JSON.stringify(responses),
+        acertos: right,
+        erros: wrong
+    };
+
+    sendResponse(data);
+
+}
+function sendResponse(data) {
+    var xhr = new XMLHttpRequest();
+    var url = "https://formspree.io/mbjzbkpw";
+    xhr.open("POST", url, true);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            var json = JSON.parse(xhr.responseText);
+            console.log(json);
+        }
+    };
+    //var data = JSON.stringify({ "email": "hey@mail.com", "password": "101010" });
+    data = JSON.stringify(data);
+    xhr.send(data);
+    end();
+}
+
+function end(){
+    question.innerHTML = `Obrigado pela participação!`
+    form = document.getElementById('form');
+    form.style.display = "none";
+}

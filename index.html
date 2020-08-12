@@ -11,6 +11,13 @@
     <div class="container">
         <h1 id="quiz-title">Quiz Title</h1>
         <div id="question" class="question">pergunta pergunta pergunta pergunta pergunta?</div>
+
+        <div class="form" id="form"> 
+            <input id="name" class="input" placeholder="Nome"/>
+            <input id="email" type="email" class="input" placeholder="Email"/>
+            <div id="send" class="next" onclick="submit()">Enviar</div>
+        </div>
+
         <div class="awnsers">
             <div id="awnser1" class="awnser" onclick="select(awnser1,0)" >resposta1</div>
             <div id="awnser2" class="awnser" onclick="select(awnser2,1)">resposta2</div>
@@ -18,6 +25,9 @@
             <div id="awnser4" class="awnser" onclick="select(awnser4,3)">resposta4</div>
             <div id="awnser5" class="awnser" onclick="select(awnser5,4)">resposta5</div>
         </div>
+        
+
+
         <div id="next" class="next" onclick="check()">Proxima</div>
     </div>
 </body>
