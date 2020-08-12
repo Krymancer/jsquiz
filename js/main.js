@@ -345,7 +345,7 @@ function check() {
     }
 
     responses.push({
-        question: selectedDiv.innerHTML,
+        question: question.innerHTML,
         status: status
     });
 
