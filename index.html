@@ -9,16 +9,21 @@
 </head>
 <body>
     <div class="container">
-        <h1 id="quiz-title">Quiz Title</h1>
+        <h1 id="quiz-title">Quiz</h1>
         <div id="question" class="question">pergunta pergunta pergunta pergunta pergunta?</div>
 
         <div class="form" id="form"> 
             <input id="name" class="input" placeholder="Nome"/>
             <input id="email" type="email" class="input" placeholder="Email"/>
-            <div id="send" class="next" onclick="submit()">Enviar</div>
+            <select id="role" name="role" class="role">
+                <option value="Coodernador">Coodernador</option>
+                <option value="Professor">Professor</option>
+                <option value="Aluno">Aluno</option>
+            </select>
+            <div id="send" class="send" onclick="submit()">Começar</div>
         </div>
 
-        <div class="awnsers">
+        <div id="awnsers" class="awnsers">
             <div id="awnser1" class="awnser" onclick="select(awnser1,0)" >resposta1</div>
             <div id="awnser2" class="awnser" onclick="select(awnser2,1)">resposta2</div>
             <div id="awnser3" class="awnser" onclick="select(awnser3,2)">resposta3</div>
@@ -26,8 +31,6 @@
             <div id="awnser5" class="awnser" onclick="select(awnser5,4)">resposta5</div>
         </div>
         
-
-
         <div id="next" class="next" onclick="check()">Proxima</div>
     </div>
 </body>

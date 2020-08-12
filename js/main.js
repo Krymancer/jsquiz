@@ -215,23 +215,61 @@ let quiz = [
     },
 ];
 
+// Generate a random Integer between 0 and 9
 function getRand() {
     return Math.floor(Math.random() * 10);
 }
 
-let indexes = [getRand(), getRand(), getRand()];
+// Get a random Integer exept the vaues that an array contains
+function getRandExept(values) {
+    let index = getRand();
+    let valid = true;
+    if (values) {
+        values.forEach(value => {
+            valid = index != value;
+        });
+    }
 
+    if (valid) {
+        return index;
+    } else {
+        return getRandExept(values);
+    }
+}
+
+// Set the random questions to the quiz
+function getRandomQuestions() {
+    let indexes = [];
+    indexes.push(getRandExept(indexes));
+    indexes.push(getRandExept(indexes));
+    indexes.push(getRandExept(indexes));
+    return indexes;
+}
+
+let indexes = getRandomQuestions();
 quiz = [quiz[indexes[0]], quiz[indexes[1]], quiz[indexes[2]]];
 
+// DOM Elements
 let awsers = [].slice.call(document.getElementsByClassName("awnser"));
 let question = document.getElementById('question');
+let startButton = document.getElementById('send');
+let nextButton = document.getElementById('next');
+let nameInput = document.getElementById('name');
+let emailInput = document.getElementById('email');
+let roleInput = document.getElementById('role');
+let awnserParentdiv = document.getElementById('awnsers');
+let form = document.getElementById('form');
+
+// Variables
 let selected = null;
 let selectedDiv = null;
 let questionID = 0;
 let right = 0;
 let wrong = 0;
 let responses = [];
+let data = {};
 
+// Select and highlight an option
 function select(div, id) {
     selected = id;
     clearSelection();
@@ -239,12 +277,14 @@ function select(div, id) {
     selectedDiv = div;
 }
 
+// Clear the highleted option
 function clearSelection() {
     awsers.forEach(awnser => {
         awnser.style.backgroundColor = "#6c757d";
     });
 }
 
+// Update the quote and the options text
 function updateQuestion() {
     question.innerHTML = quiz[questionID].question;
     awsers.forEach((awnser, index) => {
@@ -259,42 +299,38 @@ function updateQuestion() {
     clearSelection();
 }
 
-function lastQuestion(){
+// When the quiz over clean the page
+function lastQuestion() {
     if (questionID > quiz.length - 1) {
-        // alert(`Acabaram as questões, você acertou ${right} questões e errou ${wrong}!`);
-        awsers.forEach(awnser => {
-            awnser.style.visibility = "hidden";
-        });
-        question.innerHTML = `Obrigado por responder o quiz, você acertou ${right} de ${quiz.length} questões.<br>Por favor, preencha a baixo e envie as respostas`
-        button = document.getElementById('next');
-        form = document.getElementById('form');
-        button.innerHTML = "Enviar";
-        button.style.display = "none";
-        form.style.display = "inline";
+        awnserParentdiv.style.display = 'none';
+        nextButton.style.display = 'none';
+        data = { ...data, hits: right, responses: JSON.stringify(responses) };
         return true;
     }
     return false;
 }
 
+// Check if the player was a right awnser
 function check() {
     if (selected == null) return;
-    
+
     let correctIndex = -1;
+    let hit = false;
 
     quiz[questionID].choices.forEach((choice, index) => {
         if (choice.correct == true) {
-            correctIndex = index;
+            hit = hit || (index == selected);
         }
     });
 
     status = null;
 
-    if (correctIndex == selected) {
+    if (hit) {
         selectedDiv.style.backgroundColor = "#28a745";
         questionID++;
         right++;
-        status = "acertou";
-        if(!lastQuestion()){
+        status = "hit";
+        if (!lastQuestion()) {
             setTimeout(updateQuestion, 1000);
         }
 
@@ -302,57 +338,77 @@ function check() {
         selectedDiv.style.backgroundColor = "#dc3545";
         questionID++;
         wrong++;
-        status = "errou";
-        if(!lastQuestion()){
+        status = "miss";
+        if (!lastQuestion()) {
             setTimeout(updateQuestion, 1000);
         }
     }
 
     responses.push({
-        id: selected,
-        text: selectedDiv.innerHTML,
+        question: selectedDiv.innerHTML,
         status: status
     });
 
     selected = null;
     selectedDiv = null;
+
+    if (lastQuestion()) {
+        sendResponse(data);
+    }
 }
 
-updateQuestion(questionID);
+//updateQuestion(questionID);
 
-function submit(){
-    let nameInput = document.getElementById('name');
-    let emailInput = document.getElementById('email');
-    let data = {
+// Save the data
+function submit() {
+    data = {
         name: nameInput.value,
-        email: emailInput.value,
-        responses: JSON.stringify(responses),
-        acertos: right,
-        erros: wrong
-    };
-
-    sendResponse(data);
-
+        email: emailInput.value.toLowerCase(),
+        role: roleInput.value
+    }
+    if(validade()){
+        startQuiz();
+    }else{
+        alert('Por favor, verifique os dados!');
+    }
+    //sendResponse(data);
 }
+
+function validade(){
+    return (nameInput.value.length >= 3) && (validateEmail(emailInput.value));
+}
+
+function validateEmail(email) {
+    const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(String(email).toLowerCase());
+}
+
+function startQuiz() {
+    form.style.display = 'none';
+    question.style.display = 'flex';
+    awnserParentdiv.style.display = 'flex';
+    nextButton.style.display = 'flex';
+    updateQuestion(questionID);
+}
+
+// Send the data
 function sendResponse(data) {
     var xhr = new XMLHttpRequest();
-    var url = "https://formspree.io/mbjzbkpw";
+    var url = "https://formspree.io/xbjzbzjg";
     xhr.open("POST", url, true);
     xhr.setRequestHeader("Content-Type", "application/json");
     xhr.onreadystatechange = function () {
         if (xhr.readyState === 4 && xhr.status === 200) {
             var json = JSON.parse(xhr.responseText);
-            console.log(json);
+            //console.log(json);
         }
     };
-    //var data = JSON.stringify({ "email": "hey@mail.com", "password": "101010" });
     data = JSON.stringify(data);
     xhr.send(data);
     end();
 }
 
-function end(){
-    question.innerHTML = `Obrigado pela participação!`
-    form = document.getElementById('form');
-    form.style.display = "none";
+// Clear the page and ends que quiz
+function end() {
+    question.innerHTML = `Obrigado por responder o quiz, você acertou ${right} de ${quiz.length} questões.<br>Parabéns, você acaba de ganhar uma cópia teste e consultoria!`;
 }
