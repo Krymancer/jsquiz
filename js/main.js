@@ -95,7 +95,7 @@ let quiz = [
                 correct: false
             },
             {
-                text: "Apenas a resposta C não está correta",
+                text: "Apenas o terceiro item não está correto",
                 correct: true
             },
         ],
@@ -172,7 +172,7 @@ let quiz = [
         ],
     },
     {
-        question: "    9) Com a inclusão da gamificação no processo de ensino e aprendizagem, os alunos ganham autonomia, conhecimento prático e desenvolvem habilidades. Como consequência disso, o índice de satisfação e aprovação dos alunos, tem aumentado significativamente (prof Cláudio Rabelo Bastos Pró-reitor UniAteneu). Essa é uma dor que muitas instituições de ensino procuram resolver",
+        question: "Com a inclusão da gamificação no processo de ensino e aprendizagem, os alunos ganham autonomia, conhecimento prático e desenvolvem habilidades. Como consequência disso, o índice de satisfação e aprovação dos alunos, tem aumentado significativamente (prof Cláudio Rabelo Bastos Pró-reitor UniAteneu). Essa é uma dor que muitas instituições de ensino procuram resolver",
         choices: [
             {
                 text: "Concordo",
