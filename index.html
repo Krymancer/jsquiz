@@ -16,12 +16,18 @@
         <div class="form" id="form"> 
             <input id="name" class="input" placeholder="Nome"/>
             <input id="email" type="email" class="input" placeholder="Email"/>
+            <input id="phone" class="input" placeholder="Telefone (com DDD)"/>
             <select id="role" name="role" class="role">
                 <option value="Coodernador">Coodernador</option>
                 <option value="Professor">Professor</option>
                 <option value="Aluno">Aluno</option>
             </select>
             <div id="send" class="send" onclick="submit()">Começar</div>
+        </div>
+
+        <div id="option" class="option">
+            <div id="yes" class="sure" onclick="handleYes()">Claro</div>
+            <div id="no" class="negative" onclick="handleNo()">Não</div>
         </div>
 
         <div id="awnsers" class="awnsers">

@@ -1,4 +1,4 @@
-let quiz = [
+let questions = [
     {
         question: "O que é GAMIFICAÇÃO?",
         choices: [
@@ -247,18 +247,23 @@ function getRandomQuestions() {
 }
 
 let indexes = getRandomQuestions();
-quiz = [quiz[indexes[0]], quiz[indexes[1]], quiz[indexes[2]]];
+quiz = [questions[indexes[0]], questions[indexes[1]], questions[indexes[2]]];
 
 // DOM Elements
-let awsers = [].slice.call(document.getElementsByClassName("awnser"));
-let question = document.getElementById('question');
-let startButton = document.getElementById('send');
-let nextButton = document.getElementById('next');
-let nameInput = document.getElementById('name');
-let emailInput = document.getElementById('email');
-let roleInput = document.getElementById('role');
-let awnserParentdiv = document.getElementById('awnsers');
-let form = document.getElementById('form');
+const awsers = [].slice.call(document.getElementsByClassName("awnser"));
+const question = document.getElementById('question');
+const startButton = document.getElementById('send');
+const nextButton = document.getElementById('next');
+const nameInput = document.getElementById('name');
+const emailInput = document.getElementById('email');
+const roleInput = document.getElementById('role');
+const phoneInput = document.getElementById('phone');
+const awnserParentdiv = document.getElementById('awnsers');
+const form = document.getElementById('form');
+const option = document.getElementById('option');
+const yes = document.getElementById('yes');
+const no = document.getElementById('no');
+
 
 // Variables
 let selected = null;
@@ -268,6 +273,7 @@ let right = 0;
 let wrong = 0;
 let responses = [];
 let data = {};
+let userOption = undefined;
 
 // Select and highlight an option
 function select(div, id) {
@@ -286,6 +292,14 @@ function clearSelection() {
 
 // Update the quote and the options text
 function updateQuestion() {
+    if (lastQuestion()) {
+        awnserParentdiv.style.display = 'none';
+        nextButton.style.display = 'none';
+        data = { ...data, hits: right, responses: JSON.stringify(responses) };
+        sendResponse(data);
+        return;
+    }
+
     question.innerHTML = quiz[questionID].question;
     awsers.forEach((awnser, index) => {
         if (quiz[questionID].choices[index]) {
@@ -302,9 +316,6 @@ function updateQuestion() {
 // When the quiz over clean the page
 function lastQuestion() {
     if (questionID > quiz.length - 1) {
-        awnserParentdiv.style.display = 'none';
-        nextButton.style.display = 'none';
-        data = { ...data, hits: right, responses: JSON.stringify(responses) };
         return true;
     }
     return false;
@@ -331,19 +342,14 @@ function check() {
         questionID++;
         right++;
         status = "hit";
-        if (!lastQuestion()) {
-            setTimeout(updateQuestion, 1000);
-        }
-
+        setTimeout(updateQuestion, 1000);
     } else {
         selectedDiv.style.backgroundColor = "#dc3545";
         awsers[correctIndex].style.backgroundColor = "#28a745";
         questionID++;
         wrong++;
         status = "miss";
-        if (!lastQuestion()) {
-            setTimeout(updateQuestion, 1000);
-        }
+        setTimeout(updateQuestion, 1000);
     }
 
     responses.push({
@@ -353,10 +359,6 @@ function check() {
 
     selected = null;
     selectedDiv = null;
-
-    if (lastQuestion()) {
-        sendResponse(data);
-    }
 }
 
 //updateQuestion(questionID);
@@ -366,18 +368,21 @@ function submit() {
     data = {
         name: nameInput.value,
         email: emailInput.value.toLowerCase(),
-        role: roleInput.value
+        role: roleInput.value,
+        phone: phoneInput.value.replace(/[^\d]/g, '')
     }
-    if(validade()){
+    if (validade()) {
         startQuiz();
-    }else{
+    } else {
         alert('Por favor, verifique os dados!');
     }
     //sendResponse(data);
 }
 
-function validade(){
-    return (nameInput.value.length >= 3) && (validateEmail(emailInput.value));
+function validade() {
+    let phone = phoneInput.value.replace(/[^\d]/g, '');
+    const numbers = /^[0-9]+$/;
+    return (nameInput.value.length >= 3) && (validateEmail(emailInput.value)) && (phone.match(numbers) && phone.length >= 11);
 }
 
 function validateEmail(email) {
@@ -388,6 +393,19 @@ function validateEmail(email) {
 function startQuiz() {
     form.style.display = 'none';
     question.style.display = 'flex';
+    awnserParentdiv.style.display = 'flex';
+    nextButton.style.display = 'flex';
+    updateQuestion(questionID);
+}
+
+function restart() {
+    right = 0;
+    wrong = 0;
+    responses = [];
+    questionID = 0;
+    userOption = undefined;
+    let indexes = getRandomQuestions();
+    quiz = [questions[indexes[0]], questions[indexes[1]], questions[indexes[2]]];
     awnserParentdiv.style.display = 'flex';
     nextButton.style.display = 'flex';
     updateQuestion(questionID);
@@ -412,5 +430,22 @@ function sendResponse(data) {
 
 // Clear the page and ends que quiz
 function end() {
-    question.innerHTML = `Obrigado por responder o quiz, você acertou ${right} de ${quiz.length} questões.<br>Parabéns, você acaba de ganhar uma licença do UP BUSINESS GAME e uma consultoria gratuita para implantação da disciplina na sua instituição de ensino. Em breve entraremos em contato, valeu!`;
+    if (right !== 3) {
+        question.innerHTML = `Infelizmente você só acertou ${right} de ${quiz.length} questões.<br>Quer tentar de novo?`
+        option.style.display = 'flex';
+    } else {
+        question.innerHTML = `Obrigado por responder o quiz, você acertou ${right} de ${quiz.length} questões.<br>Parabéns, você acaba de ganhar uma licença do UP BUSINESS GAME e uma consultoria gratuita para implantação da disciplina na sua instituição de ensino. Em breve entraremos em contato, valeu!`;
+    }
+}
+
+function handleYes() {
+    userOption = true;
+    option.style.display = 'none';
+    restart();
+}
+
+function handleNo() {
+    userOption = false;
+    option.style.display = 'none';
+    question.innerHTML = '😢 Ah, que pena!';
 }
