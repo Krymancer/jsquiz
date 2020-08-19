@@ -240,7 +240,7 @@ function getRandExept(values) {
 // Set the random questions to the quiz
 function getRandomQuestions() {
     let indexes = [];
-    indexes.push(getRandExept(indexes));
+    indexes.push(0);
     indexes.push(getRandExept(indexes));
     indexes.push(getRandExept(indexes));
     return indexes;
@@ -320,6 +320,7 @@ function check() {
     quiz[questionID].choices.forEach((choice, index) => {
         if (choice.correct == true) {
             hit = hit || (index == selected);
+            correctIndex = index;
         }
     });
 
@@ -336,6 +337,7 @@ function check() {
 
     } else {
         selectedDiv.style.backgroundColor = "#dc3545";
+        awsers[correctIndex].style.backgroundColor = "#28a745";
         questionID++;
         wrong++;
         status = "miss";
@@ -410,5 +412,5 @@ function sendResponse(data) {
 
 // Clear the page and ends que quiz
 function end() {
-    question.innerHTML = `Obrigado por responder o quiz, você acertou ${right} de ${quiz.length} questões.<br>Parabéns, você acaba de ganhar uma cópia teste e consultoria!`;
+    question.innerHTML = `Obrigado por responder o quiz, você acertou ${right} de ${quiz.length} questões.<br>Parabéns, você acaba de ganhar uma licença do UP BUSINESS GAME e uma consultoria gratuita para implantação da disciplina na sua instituição de ensino. Em breve entraremos em contato, valeu!`;
 }
