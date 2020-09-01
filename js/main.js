@@ -250,6 +250,7 @@ let indexes = getRandomQuestions();
 quiz = [questions[indexes[0]], questions[indexes[1]], questions[indexes[2]]];
 
 // DOM Elements
+const container = document.getElementById('container');
 const awsers = [].slice.call(document.getElementsByClassName("awnser"));
 const question = document.getElementById('question');
 const startButton = document.getElementById('send');
@@ -274,6 +275,10 @@ let wrong = 0;
 let responses = [];
 let data = {};
 let userOption = undefined;
+
+//Image
+let image = new Image();
+image.src = '../images/win.gif'
 
 // Select and highlight an option
 function select(div, id) {
@@ -435,6 +440,8 @@ function end() {
         option.style.display = 'flex';
     } else {
         question.innerHTML = `Obrigado por responder o quiz, você acertou ${right} de ${quiz.length} questões.<br>Parabéns, você acaba de ganhar uma licença do UP BUSINESS GAME e uma consultoria gratuita para implantação da disciplina na sua instituição de ensino. Em breve entraremos em contato, valeu!`;
+        
+        container.innerHTML = '<img src="images/win.gif"></img>';
     }
 }
 
