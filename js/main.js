@@ -443,6 +443,8 @@ function end() {
         quizTitle.style.display = 'none';
         question.style.display = 'none';
         video.style.display = 'flex';
+        /* Workaround for Microsoft Edge Legacy */
+        video.play();
     }
 }
 
