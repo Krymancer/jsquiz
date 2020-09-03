@@ -264,7 +264,8 @@ const form = document.getElementById('form');
 const option = document.getElementById('option');
 const yes = document.getElementById('yes');
 const no = document.getElementById('no');
-
+const video = document.getElementById('video');
+const quizTitle = document.getElementById('quiz-title');
 
 // Variables
 let selected = null;
@@ -439,9 +440,9 @@ function end() {
         question.innerHTML = `Infelizmente você só acertou ${right} de ${quiz.length} questões.<br>Quer tentar de novo?`
         option.style.display = 'flex';
     } else {
-        question.innerHTML = `Obrigado por responder o quiz, você acertou ${right} de ${quiz.length} questões.<br>Parabéns, você acaba de ganhar uma licença do UP BUSINESS GAME e uma consultoria gratuita para implantação da disciplina na sua instituição de ensino. Em breve entraremos em contato, valeu!`;
-        
-        container.innerHTML = '<img src="images/win.gif"></img>';
+        quizTitle.style.display = 'none';
+        question.style.display = 'none';
+        video.style.display = 'flex';
     }
 }
 
