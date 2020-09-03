@@ -226,7 +226,7 @@ function getRandExept(values) {
     let valid = true;
     if (values) {
         values.forEach(value => {
-            valid = index != value;
+            valid &= index != value;
         });
     }
 
@@ -238,16 +238,29 @@ function getRandExept(values) {
 }
 
 // Set the random questions to the quiz
-function getRandomQuestions() {
-    let indexes = [];
-    indexes.push(0);
-    indexes.push(getRandExept(indexes));
-    indexes.push(getRandExept(indexes));
+function getRandomQuestions(seed) {
+    let indexes;
+    if (seed) {
+        indexes = seed;
+        indexes.push(0);
+        indexes.push(getRandExept(indexes));
+        indexes.push(getRandExept(indexes));
+
+        indexes = [indexes[3], indexes[4], indexes[5]];
+    } else {
+        indexes = [];
+
+        indexes.push(0);
+        indexes.push(getRandExept(indexes));
+        indexes.push(getRandExept(indexes));
+    }   
+
     return indexes;
 }
 
 let indexes = getRandomQuestions();
 quiz = [questions[indexes[0]], questions[indexes[1]], questions[indexes[2]]];
+
 
 // DOM Elements
 const container = document.getElementById('container');
@@ -305,7 +318,7 @@ function updateQuestion() {
         sendResponse(data);
         return;
     }
-
+    console.log(questionID);
     question.innerHTML = quiz[questionID].question;
     awsers.forEach((awnser, index) => {
         if (quiz[questionID].choices[index]) {
@@ -410,7 +423,7 @@ function restart() {
     responses = [];
     questionID = 0;
     userOption = undefined;
-    let indexes = getRandomQuestions();
+    indexes = getRandomQuestions(indexes);
     quiz = [questions[indexes[0]], questions[indexes[1]], questions[indexes[2]]];
     awnserParentdiv.style.display = 'flex';
     nextButton.style.display = 'flex';
