@@ -392,16 +392,30 @@ function submit() {
     }
     if (validade()) {
         startQuiz();
-    } else {
-        alert('Por favor, verifique os dados!');
-    }
+    }   
     //sendResponse(data);
 }
 
 function validade() {
     let phone = phoneInput.value.replace(/[^\d]/g, '');
     const numbers = /^[0-9]+$/;
-    return (nameInput.value.length >= 3) && (validateEmail(emailInput.value)) && (phone.match(numbers) && phone.length >= 11);
+
+    if(nameInput.value.length < 3){
+        alert("O nome deve conter pelo menos 3 caracteres examplo: Fulano de Tal");
+        return false;
+    }
+
+    if(!validateEmail(emailInput.value)){
+        alert("Digite um email valido, exemplo: email@examplo.com");
+        return false;
+    }
+
+    if((!phone.match(numbers) && phone.length < 11)){
+        alert("Digite um número de telefonee valido, exemplo: 11 991234567");
+        return false;
+    }
+
+    return true;
 }
 
 function validateEmail(email) {
