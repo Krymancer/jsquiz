@@ -447,7 +447,7 @@ function restart() {
 // Send the data
 function sendResponse(data) {
     var xhr = new XMLHttpRequest();
-    var url = "https://formspree.io/xbjzbzjg";
+    var url = "https://formspree.io/mbjznqbr";
     xhr.open("POST", url, true);
     xhr.setRequestHeader("Content-Type", "application/json");
     xhr.onreadystatechange = function () {
